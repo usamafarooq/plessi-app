@@ -1,10 +1,23 @@
 <ion-view view-title="Login" align-title="left">
-    <ion-content>
+    <ion-content scroll="false">
 
-        <div class="login-wrapper">
-            <div class="login-form">
+        <div class="login-wrapper full-screen">
+            <div class="login-form full-width padding">
                 <h1 class="text-center">Login</h1>
-                <div class="card">
+                <div class="login-box full-width">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-submit" ui-sref="home">Login</button>
+                    </div>
+                </div>
+                <!-- <div class="card">
                     <div class="item item-text-wrap">
                         <div class="list border-bottom-custom">
                             <label class="item item-input">
@@ -25,7 +38,7 @@
                         </button>
                     </div>
                 </div>
-
+ -->
             </div>
         </div>
 
