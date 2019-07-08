@@ -16,6 +16,14 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
           controller: 'taskCtrl'
         }
       }
+    }).state('home.list', {
+      url: '/list',
+      views: {
+        'list': {
+          templateUrl: 'templates/list.html',
+          controller: 'listCtrl'
+        }
+      }
     }).state('home.notification', {
       url: '/notification',
       views: {

@@ -140,3 +140,19 @@
     background: #03a9f4 !important;
     border: 0;
 }
+
+.item.row.task-list {
+    display: flex;
+    align-items: center;
+}
+
+.task-label{
+    color: #ccc;
+    font-size: 12px
+}
+
+.task-list h3{
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 0;
+}
