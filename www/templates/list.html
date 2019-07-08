@@ -1,13 +1,13 @@
 <ion-view view-title="Account" align-title="left">
-    <ion-content class="padding">
-        <ion-scroll overflow-scroll="false">
+    <ion-content class="padding has-tabs-bottom">
+        <!-- <ion-scroll overflow-scroll="false"> -->
         	<div class="login-wrapper">
                 <div class="login-form">
                     <h1 class="text-center screen-title">Task</h1>
         		</div>
         	</div>
             <div class = "list list-inset">
-                <div class = "item row task-list">
+                <div class = "item row task-list" ng-click = "openModal()">
                     <div class="checkbox-light col-20">
                         <label class = "checkbox small">
                             <input type = "checkbox" readonly="" onClick="return false;">
@@ -105,6 +105,6 @@
                 </div>
 
             </div>
-        </ion-scroll>
+        <!-- </ion-scroll> -->
     </ion-content>
 </ion-view>

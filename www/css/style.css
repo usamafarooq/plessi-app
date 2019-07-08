@@ -156,3 +156,33 @@
     font-size: 16px;
     margin-bottom: 0;
 }
+
+.close-btn{
+    float: right;
+    background: none;
+    border: none;
+    margin-top: 5px;
+    color: #fff;
+}
+
+.top-bar{
+    background: linear-gradient(to right,#226faa 0,#2989d8 37%,#72c0d3 100%);
+    color: #fff;
+}
+
+.top-bar .title{
+    text-align: left;
+    color: #fff;
+}
+
+.details label{
+    font-size: 14px;
+}
+
+.details p{
+    font-size: 12px;
+}
+
+.tabs-scroll{
+    height: 30%;
+}
