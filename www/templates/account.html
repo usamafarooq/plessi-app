@@ -5,12 +5,12 @@
                 <h1 class="text-center screen-title">Account</h1>
     		</div>
     	</div>
-    	<div class="account-detail text-center">
-    		<img src="http://www.sirinetwork.it/isolaCRM/uploads/staff_profile_images/14/thumb_Photo.jpg" class="img img-responsive staff-profile-image-thumb" alt="David  Fanfano">
-	    	<h3>First Name: <span>David</span></h3>
-	    	<h3>Last Name: <span>Fanfano</span></h3>
-	    	<h3>Email: <span>david.fanfano@gmail.com</span></h3>
-	    	<h3>Phone: <span>3402284619</span></h3>
+    	<div class="account-detail text-center" ng-init="getProfile()">
+    		<img src="{{media}}/staff_profile_images/{{profile.staffid}}/thumb_{{profile.profile_image}}" class="img img-responsive staff-profile-image-thumb" alt="David  Fanfano">
+	    	<h3>First Name: <span>{{profile.firstname}}</span></h3>
+	    	<h3>Last Name: <span>{{profile.lastname}}</span></h3>
+	    	<h3>Email: <span>{{profile.email}}</span></h3>
+	    	<h3>Phone: <span>{{profile.phonenumber}}</span></h3>
     	</div>
     </ion-content>
 </ion-view>
