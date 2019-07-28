@@ -16,18 +16,16 @@ app.controller('accountCtrl', function($scope, $http, $ionicPopup, $state, $wind
 	        }
 	    }).then(function(data, status, headers, config) {
 	    		response = data.data;
-	    		console.log(response);
-	    		$scope.profile = response.data;
-	    	// if (response.status == 200) {
-		    // 	$window.localStorage["user_key"] = response.data
-		    //     $state.go('home.account');
-	    	// }
-	    	// else{
-	    	// 	$ionicPopup.alert({
-			   //    	title: 'login',
-			   //    	template: response.message
-			   //  });
-	    	// }
+	    		
+	    	if (response.status == 200) {
+		    	$scope.profile = response.data;
+	    	}
+	    	else{
+	    		$ionicPopup.alert({
+			      	title: 'profile',
+			      	template: response.message
+			    });
+	    	}
 	    });
 	}
 });

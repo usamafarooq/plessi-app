@@ -6,105 +6,51 @@
                     <h1 class="text-center screen-title">Task</h1>
         		</div>
         	</div>
-            <div class = "list list-inset">
-                <div class = "item row task-list" ng-click = "openModal()">
+            <div class = "list list-inset" ng-init="getTaskList()">
+                <div class = "item row task-list" ng-click = "openModal()" ng-if="lists.length > 0" ng-repeat="task in lists">
                     <div class="checkbox-light col-20">
                         <label class = "checkbox small">
                             <input type = "checkbox" readonly="" onClick="return false;">
                         </label>
                     </div>
                     <div class="col">
-                        <span class="task-label">High</span>
-                        <h3>Città della Pieve</h3>
-                        <span class="task-label">25/02/2019 00:00:00</span>
+                        <span class="task-label">{{priority(task.priority)}}</span>
+                        <h3>{{task.name}}</h3>
+                        <span class="task-label">{{task.startdate}}</span>
                     </div>
                 </div>
-                <div class = "item row task-list">
-                    <div class="checkbox-positive col-20">
+
+                <div class = "item row task-list" ng-if="lists.length == 0" >
+                    <div class="checkbox-light col-20">
                         <label class = "checkbox small">
                             <input type = "checkbox" readonly="" onClick="return false;">
                         </label>
                     </div>
                     <div class="col">
-                        <span class="task-label">High</span>
-                        <h3>Città della Pieve</h3>
-                        <span class="task-label">25/02/2019 00:00:00</span>
-                    </div>
-                </div>
-                <div class = "item row task-list">
-                    <div class="checkbox-balanced col-20">
-                        <label class = "checkbox small">
-                            <input type = "checkbox" readonly="" onClick="return false;">
-                        </label>
-                    </div>
-                    <div class="col">
-                        <span class="task-label">High</span>
-                        <h3>Città della Pieve</h3>
-                        <span class="task-label">25/02/2019 00:00:00</span>
-                    </div>
-                </div>
-                <div class = "item row task-list">
-                    <div class="checkbox-balanced col-20">
-                        <label class = "checkbox small">
-                            <input type = "checkbox" readonly="" onClick="return false;">
-                        </label>
-                    </div>
-                    <div class="col">
-                        <span class="task-label">High</span>
-                        <h3>Città della Pieve</h3>
-                        <span class="task-label">25/02/2019 00:00:00</span>
-                    </div>
-                </div>
-                <div class = "item row task-list">
-                    <div class="checkbox-balanced col-20">
-                        <label class = "checkbox small">
-                            <input type = "checkbox" readonly="" onClick="return false;">
-                        </label>
-                    </div>
-                    <div class="col">
-                        <span class="task-label">High</span>
-                        <h3>Città della Pieve</h3>
-                        <span class="task-label">25/02/2019 00:00:00</span>
-                    </div>
-                </div>
-                <div class = "item row task-list">
-                    <div class="checkbox-balanced col-20">
-                        <label class = "checkbox small">
-                            <input type = "checkbox" readonly="" onClick="return false;">
-                        </label>
-                    </div>
-                    <div class="col">
-                        <span class="task-label">High</span>
-                        <h3>Città della Pieve</h3>
-                        <span class="task-label">25/02/2019 00:00:00</span>
-                    </div>
-                </div>
-                <div class = "item row task-list">
-                    <div class="checkbox-balanced col-20">
-                        <label class = "checkbox small">
-                            <input type = "checkbox" readonly="" onClick="return false;">
-                        </label>
-                    </div>
-                    <div class="col">
-                        <span class="task-label">High</span>
-                        <h3>Città della Pieve</h3>
-                        <span class="task-label">25/02/2019 00:00:00</span>
-                    </div>
-                </div>
-                <div class = "item row task-list">
-                    <div class="checkbox-balanced col-20">
-                        <label class = "checkbox small">
-                            <input type = "checkbox" readonly="" onClick="return false;">
-                        </label>
-                    </div>
-                    <div class="col">
-                        <span class="task-label">High</span>
-                        <h3>Città della Pieve</h3>
-                        <span class="task-label">25/02/2019 00:00:00</span>
+                        
+                        <h3>Not Task available</h3>
                     </div>
                 </div>
 
             </div>
+
+
         <!-- </ion-scroll> -->
     </ion-content>
 </ion-view>
+
+<!-- <div class = "list list-inset" ng-init="getTaskList()">
+                <div class = "item row task-list" ng-click = "openModal()" ng-repeat="task in lists">
+                    <div class="checkbox-light col-20">
+                        <label class = "checkbox small">
+                            <input type = "checkbox" readonly="" onClick="return false;">
+                        </label>
+                    </div>
+                    <div class="col">
+                        <span class="task-label">{{task.priority}}</span>
+                        <h3>{{task.name}}</h3>
+                        <span class="task-label">{{task.startdate}}</span>
+                    </div>
+                </div>
+
+            </div> -->
