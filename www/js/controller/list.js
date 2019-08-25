@@ -23,6 +23,33 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
          }
          else{
             $ionicPopup.alert({
+                  title: 'Task',
+                  template: response.message
+             });
+         }
+       });
+   } 
+
+
+   $scope.getTaskDetail = function(taskId) {
+      console.log(taskId);
+      $http({
+           method: 'POST',
+           url: api + "task/details/"+taskId,
+           data: $.param({
+               user_key : $window.localStorage["user_key"]
+           }),
+           headers: {
+               'Content-Type': 'application/x-www-form-urlencoded'
+           }
+       }).then(function(data, status, headers, config) {
+            response = data.data;
+            console.log(response);
+         if (response.status == 200) {
+               $scope.details = response.data;
+         }
+         else{
+            $ionicPopup.alert({
                   title: 'login',
                   template: response.message
              });
@@ -51,7 +78,8 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
       return return_val;
    } 
 
-   $scope.openModal = function() {
+   $scope.openModal = function(id) {
+      this.getTaskDetail(id);
       $scope.modal.show();
    };
 	
@@ -73,4 +101,18 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
    $scope.$on('modal.removed', function() {
       // Execute action
    });
+  $scope.timeStart = 0;
+   $scope.countController = function(old_time = 0){
+    $scope.timeStart = 1;
+
+      $scope.countTime = old_time;    
+      var timer = setInterval(function(){
+          $scope.countTime++;
+          $scope.$apply();
+          console.log($scope.countTime);
+      }, 1000);  
+  }
 });
+
+
+

@@ -7,7 +7,7 @@
         		</div>
         	</div>
             <div class = "list list-inset" ng-init="getTaskList()">
-                <div class = "item row task-list" ng-click = "openModal()" ng-if="lists.length > 0" ng-repeat="task in lists">
+                <div class = "item row task-list" ng-repeat="task in lists" ng-click = "openModal(task.id)" ng-if="lists.length > 0" >
                     <div class="checkbox-light col-20">
                         <label class = "checkbox small">
                             <input type = "checkbox" readonly="" onClick="return false;">
