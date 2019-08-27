@@ -47,6 +47,7 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
             console.log(response);
          if (response.status == 200) {
                $scope.details = response.data;
+               $scope.diff = response.diff;
          }
          else{
             $ionicPopup.alert({
@@ -79,6 +80,8 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
    } 
 
    $scope.openModal = function(id) {
+      $scope.countTime = 0;
+      $scope.timeStart = 0;
       this.getTaskDetail(id);
       $scope.modal.show();
    };
@@ -102,16 +105,71 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
       // Execute action
    });
   $scope.timeStart = 0;
-   $scope.countController = function(old_time = 0){
+   $scope.startTime = function(old_time = 0){
     $scope.timeStart = 1;
 
       $scope.countTime = old_time;    
       var timer = setInterval(function(){
           $scope.countTime++;
           $scope.$apply();
-          console.log($scope.countTime);
+          // console.log($scope.countTime);
       }, 1000);  
+
+      console.log(old_time);
+      if (old_time == 0) 
+      {
+        $http({
+           method: 'POST',
+           url: api + "task/save_start_time",
+           data: $.param({
+               user_key : $window.localStorage["user_key"],
+               task_id   : $scope.details.id
+           }),
+           headers: {
+               'Content-Type': 'application/x-www-form-urlencoded'
+           }
+       }).then(function(data, status, headers, config) {
+            response = data.data;
+            console.log(response);
+         if (response.status == 200) {
+               // $scope.details = response.data;
+         }
+         else{
+            $ionicPopup.alert({
+                  title: 'login',
+                  template: response.message
+             });
+         }
+       });
+      }
   }
+
+
+  $scope.completeTask = function() {
+        $http({
+           method: 'POST',
+           url: api + "task/complete_task",
+           data: $.param({
+               user_key : $window.localStorage["user_key"],
+               task_id   : $scope.details.id
+           }),
+           headers: {
+               'Content-Type': 'application/x-www-form-urlencoded'
+           }
+       }).then(function(data, status, headers, config) {
+            response = data.data;
+            console.log(response);
+         if (response.status == 200) {
+               // $scope.details = response.data;
+         }
+         else{
+            $ionicPopup.alert({
+                  title: 'login',
+                  template: response.message
+             });
+         }
+       });
+      }
 });
 
 

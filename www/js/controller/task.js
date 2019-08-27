@@ -1,4 +1,4 @@
-app.controller('taskCtrl', function($scope, $http, $ionicPopup, $state, $ionicHistory) {
+app.controller('taskCtrl', function($scope, $http, $ionicPopup, $state, $ionicHistory, $window) {
 // var app_calendar_events_limit = 4;
 // var app_default_view_calendar="month";
 // var isRTL = 'false';
@@ -72,6 +72,60 @@ app.controller('taskCtrl', function($scope, $http, $ionicPopup, $state, $ionicHi
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
+
+  $scope.events = [];
+
+  $scope.getTaskList = function() {
+      $http({
+           method: 'POST',
+           url: api + "task",
+           data: $.param({
+               user_key : $window.localStorage["user_key"]
+           }),
+           headers: {
+               'Content-Type': 'application/x-www-form-urlencoded'
+           }
+       }).then(function(data, status, headers, config) {
+            response = data.data;
+         if (response.status == 200) {
+               taskLists = response.data;
+               events = [];
+               $.each(taskLists, function(index, val) {
+                 startdate = val.startdate.split('-');
+                 month = parseInt(startdate[1])+1;
+                 startdate = new Date(startdate[0], month, startdate[2] );
+                 duedate = startdate;
+                 if (val.duedate != null) 
+                 {
+                  duedate = val.duedate.split('-');
+                  month = parseInt(duedate[1])+1;
+                  duedate = new Date(duedate[0], month, duedate[2] );
+                 }
+                 calendarData = {
+                  type : 'task',
+                  title: val.name,
+                  start: startdate,
+                  end: duedate,
+                  allDay:false
+                 };
+                 events.push(calendarData);
+                 // console.log(startdate);
+
+               });
+
+               $scope.events = events;
+               $scope.initCalender();
+         }
+         else{
+            $ionicPopup.alert({
+                  title: 'Task',
+                  template: response.message
+             });
+         }
+       });
+   }
+$scope.initCalender = function() {
+
 	$scope.uiConfig = {
       calendar:{
         height: 450,
@@ -84,11 +138,9 @@ app.controller('taskCtrl', function($scope, $http, $ionicPopup, $state, $ionicHi
         eventClick: $scope.alertEventOnClick,
         eventDrop: $scope.alertOnDrop,
         eventResize: $scope.alertOnResize,
-        events: [ 
-          {type:'party',title: 'Lunch',start: new Date(y, m, d, 12, 0),end: new Date(y, m, d, 14, 0),allDay: false},
-          {type:'party',title: 'Lunch 2',start: new Date(y, m, d, 12, 0),end: new Date(y, m, d, 14, 0),allDay: false},
-          {type:'party',title: 'Click for Google',start: new Date(y, m, 28),end: new Date(y, m, 29)}
-        ]
+        events : $scope.events
       }
     };
+}
+
 });
