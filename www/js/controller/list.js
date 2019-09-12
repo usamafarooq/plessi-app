@@ -1,3 +1,5 @@
+
+// constructor(private camera: Camera) { }
 app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $state, $window, $ionicHistory) {
    $scope.lists = {};
 	$scope.modal = $ionicModal.fromTemplateUrl( 'templates/modal.html', {
@@ -5,6 +7,55 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
       animation: 'slide-in-up'
    }).then(function(modal) { $scope.modal = modal; })
 
+
+  $scope.takePicture = function (options) {
+
+    navigator.camera.getPicture(onSuccess, onFail,
+      {
+          sourceType : navigator.camera.PictureSourceType.CAMERA,
+          correctOrientation: true,
+          quality: 100,
+          targetWidth: 300,
+          destinationType: navigator.camera.DestinationType.DATA_URL,
+          encodingType: navigator.camera.EncodingType.JPEG,
+          saveToPhotoAlbum:false
+      });
+      function onSuccess(imageData) {
+          $scope.task.picture =  "data:image/jpeg;base64," + imageData;
+          $scope.$apply();
+      }
+
+      function onFail(message) {
+          // if (appConstants.debug) {
+              alert('Failed because: ' + message);
+          // }
+      }
+  };
+
+
+  $scope.uploadFile = function() {
+        var fileURL = $scope.picture;
+        var url =  api + "task/upload_file";
+        if (fileURL) {
+            var MakeGray_Form = new FormData();
+            MakeGray_Form.append("FileName", fileURL);
+            $http({
+            method : "POST",
+            url    : url,
+            data   : MakeGray_Form,
+            transformRequest: angular.identity,
+            headers: {'Content-Type': undefined}
+            }).then(function(response){                     
+               //response object should hold your base64 image data.
+               //you can change src of an img tag with ng-src and let the browser render your image.
+            },function(response){});
+        }
+        else{
+            alert("Please upload an image");
+        }
+      
+    }
+   
    $scope.getTaskList = function() {
       $http({
            method: 'POST',
@@ -48,6 +99,8 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
          if (response.status == 200) {
                $scope.details = response.data;
                $scope.diff = response.diff;
+               if ($scope.diff > 0) 
+                $scope.startTime('start', $scope.diff );
          }
          else{
             $ionicPopup.alert({
@@ -57,6 +110,10 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
          }
        });
    } 
+
+
+
+
 
 
    $scope.priority = function(priority) {
@@ -97,30 +154,42 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
 	
    // Execute action on hide modal
    $scope.$on('modal.hidden', function() {
-      // Execute action
+      $scope.is_reached = 0;
+      $scope.task = {};
+      $scope.task.picture = '';
+      $scope.task.description = '';
+      $scope.showCommpleteTaskFileds = 0;
    });
 	
    // Execute action on remove modal
    $scope.$on('modal.removed', function() {
       // Execute action
    });
-  $scope.timeStart = 0;
-   $scope.startTime = function(old_time = 0){
+   $scope.is_time_start = 0;
+   $scope.timeStart = 0;
+   $scope.startTime = function(action, old_time = 0){
     $scope.timeStart = 1;
 
-      $scope.countTime = old_time;    
-      var timer = setInterval(function(){
-          $scope.countTime++;
-          $scope.$apply();
-          // console.log($scope.countTime);
-      }, 1000);  
+      $scope.countTime = old_time;
+      if ($scope.is_time_start == 0) 
+      {
+        var timer = setInterval(function(){
+            $scope.countTime++;
+            $scope.$apply();
+            // console.log($scope.countTime);
+        }, 1000);  
+        $scope.is_time_start = 1;
+      }    
 
-      console.log(old_time);
+      if (action == 'end') 
+      {
+        $scope.timeStart = 0;
+      }
       if (old_time == 0) 
       {
         $http({
            method: 'POST',
-           url: api + "task/save_start_time",
+           url: api + "task/save_start_stop_time",
            data: $.param({
                user_key : $window.localStorage["user_key"],
                task_id   : $scope.details.id
@@ -143,15 +212,32 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
        });
       }
   }
+  $scope.task = {};
+  $scope.task.picture = '';
+  $scope.task.description = '';
+  $scope.showCommpleteTaskFileds = 0;
 
-
+  $scope.showFields = function() {
+    $scope.showCommpleteTaskFileds = 1;
+  }
   $scope.completeTask = function() {
+    // console.log($scope.task);
+    if ($scope.task.description == '') {
+      alert('Please add comment');
+      return false;
+    }
+    if ($scope.task.picture == '') {
+      alert('Please attached picture');
+      return false;
+    }
+
         $http({
            method: 'POST',
            url: api + "task/complete_task",
            data: $.param({
                user_key : $window.localStorage["user_key"],
-               task_id   : $scope.details.id
+               task_id   : $scope.details.id,
+               task       : task
            }),
            headers: {
                'Content-Type': 'application/x-www-form-urlencoded'
@@ -160,6 +246,12 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
             response = data.data;
             console.log(response);
          if (response.status == 200) {
+              $ionicPopup.alert({
+                  title: 'Task',
+                  template: 'Task Updated successfully'
+             });
+              $scope.closeModal();
+              // $state.go('home.account');
                // $scope.details = response.data;
          }
          else{
@@ -170,6 +262,53 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
          }
        });
       }
+
+
+  $scope.checkLocation = function() {
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+  }
+
+   function onError(error) {
+        alert(error.message);
+    }
+
+  $scope.is_reached = 0;
+  var onSuccess = function(position) {
+      $scope.current_location = {
+        latitude : position.coords.latitude,
+        longitude : position.coords.longitude,
+
+      };
+
+      $http({
+           method: 'POST',
+           url: api + "task/check_location",
+           data: $.param({
+               user_key : $window.localStorage["user_key"],
+               latitude : $scope.current_location.latitude,
+               longitude : $scope.current_location.longitude,
+               task_id   : $scope.details.id
+           }),
+           headers: {
+               'Content-Type': 'application/x-www-form-urlencoded'
+           }
+       }).then(function(data, status, headers, config) {
+            response = data.data;
+            console.log(response);
+         if (response.status == 200) {
+               $scope.is_reached = response.data;
+         }
+         else{
+            $ionicPopup.alert({
+                  title: 'login',
+                  template: response.message
+             });
+         }
+       });
+        
+    };
 });
 
 
