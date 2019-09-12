@@ -237,7 +237,7 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
            data: $.param({
                user_key : $window.localStorage["user_key"],
                task_id   : $scope.details.id,
-               task       : task
+               task       : $scope.task
            }),
            headers: {
                'Content-Type': 'application/x-www-form-urlencoded'
