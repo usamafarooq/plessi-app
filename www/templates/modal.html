@@ -4,33 +4,38 @@
     </ion-header-bar>
     <ion-content class="padding">
     	<div class="details">
-    		<label>Description</label>
+    		<label>descrizione:</label>
 	        <p ng-bind-html="details.description"></p>
     	</div>
     	<div class="details">
 
     		<label>Task Info</label>
-    		<p><strong>Status: </strong><span>Not Started</span></p>
-    		<p><strong>Start Date: </strong><span>{{details.startdate}}</span></p>
-    		<p><strong>Due Date: </strong><span>{{details.duedate}}</span></p>
+            <p><strong>Cliente: </strong><span>{{details.company}}</span></p>
+            <p><strong>Plesso: </strong><span>{{ details.plessi_name }} - {{details.plessi_address}}</span></p>
+    		<p><strong>Status: </strong><span>{{details.status}}</span></p>
+    		<p><strong>data e Ora di inizio: </strong><span>{{details.startdate}}</span></p>
+            <p><strong>data e ora di fine: </strong><span>{{details.duedate}}</span></p>
+    		<p><strong>il tuo tempo di accesso: </strong><span>{{countTime | secondsToTime }}</span></p>
     		<!-- <p><strong>Priority: </strong><span>Not Started</span></p> -->
     	</div>
-           <button ng-if="is_reached == 1" class = "button button-balanced button-small icon ion-checkmark-round" ng-click="showFields()"></button>
+           
+            
+           <!-- <button class = "button button-balanced button-small icon ion-refresh " ng-click="checkLocation()"></button> -->
+           <button class = "button icon icon-left full-width icon ion-map" ng-show="is_reached == 0" ng-click="checkLocation()"> Sono nel plesso</button>
 
-           <button class = "button button-balanced button-small icon ion-refresh" ng-click="checkLocation()"></button>
-
-        <div ng-show="timeStart == 1 ">{{countTime}}</div>
-        <button ng-show="timeStart != 1" ng-if="is_reached == 1" class = "button icon icon-left full-width" ng-click="startTime('start', diff)"> <i class="ion-clock"></i> Start Timer</button>
-        <button ng-show="timeStart == 1 " ng-if="is_reached == 1" ng-click="startTime('end', 0)" class = "button icon icon-left full-width"> <i class="ion-clock"></i> Stop Timer</button>
+        
+        <button ng-show="timeStart != 1" ng-if="is_reached == 1" class = "button icon icon-left full-width" ng-click="startTime('start')"> <i class="ion-clock"></i> Start Timer</button>
+        <button ng-show="timeStart == 1 " ng-if="is_reached == 1" ng-click="startTime('end')" class = "button icon icon-left full-width"> <i class="ion-clock"></i> Stop Timer</button>
 
         <p ng-if="is_reached == 0">
             Press refresh button when you reach to the location
         </p>
-        <div ng-show="showCommpleteTaskFileds == 1">
+        <div ng-show="is_reached == 1">
             <textarea placeholder="Description" ng-model="task.description"></textarea>
             <img ng-src = "{{task.picture}}">
             <button class = "button" ng-click = "takePicture()">Take Picture</button>
-            <button class = "button" ng-click = "completeTask()">Submit</button>
+            <button class = "button" ng-click = "commentTask()">Submit</button>
+            <button ng-if="is_reached == 1" class = "button button-balanced  full-width icon ion-checkmark-round" ng-click="complete_task()">CONCLUDI ATTIVITA’</button>
         </div>
         <!-- <p>{{picture}}</p> -->
 

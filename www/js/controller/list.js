@@ -7,7 +7,7 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
       animation: 'slide-in-up'
    }).then(function(modal) { $scope.modal = modal; })
 
-
+  var timer ;
   $scope.takePicture = function (options) {
 
     navigator.camera.getPicture(onSuccess, onFail,
@@ -83,7 +83,7 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
 
 
    $scope.getTaskDetail = function(taskId) {
-      console.log(taskId);
+      // console.log(taskId);
       $http({
            method: 'POST',
            url: api + "task/details/"+taskId,
@@ -99,8 +99,16 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
          if (response.status == 200) {
                $scope.details = response.data;
                $scope.diff = response.diff;
-               if ($scope.diff > 0) 
-                $scope.startTime('start', $scope.diff );
+               if ($scope.diff > 0) {
+                  if (response.time_start == 1) 
+                  {
+                    clearInterval(timer);
+                    $scope.startTime('start', $scope.diff );
+                  }
+                  else{
+                    $scope.countTime = $scope.diff;
+                  }
+               }
          }
          else{
             $ionicPopup.alert({
@@ -144,7 +152,7 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
    };
 	
    $scope.closeModal = function() {
-      $scope.modal.hide();
+      $scope.modal.remove();
    };
 	
    //Cleanup the modal when we're done with it!
@@ -158,32 +166,35 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
       $scope.task = {};
       $scope.task.picture = '';
       $scope.task.description = '';
-      $scope.showCommpleteTaskFileds = 0;
    });
 	
    // Execute action on remove modal
    $scope.$on('modal.removed', function() {
       // Execute action
    });
-   $scope.is_time_start = 0;
+   // $scope.is_time_start = 0;
    $scope.timeStart = 0;
+  
    $scope.startTime = function(action, old_time = 0){
     $scope.timeStart = 1;
-
-      $scope.countTime = old_time;
-      if ($scope.is_time_start == 0) 
+      last_time_count = $scope.countTime;
+      $scope.countTime = ($scope.diff > 0) ? $scope.diff : 0;
+      if (action == 'start') 
       {
-        var timer = setInterval(function(){
+        timer = setInterval(function(){
             $scope.countTime++;
             $scope.$apply();
-            // console.log($scope.countTime);
+            console.log($scope.countTime);
         }, 1000);  
-        $scope.is_time_start = 1;
-      }    
-
-      if (action == 'end') 
+        // $scope.is_time_start = 1;
+      }else   
       {
+        $scope.is_time_start = 1;
+        // console.log('asdf')
         $scope.timeStart = 0;
+        clearInterval(timer);
+        $scope.countTime = last_time_count;
+        $scope.diff = last_time_count;
       }
       if (old_time == 0) 
       {
@@ -199,7 +210,6 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
            }
        }).then(function(data, status, headers, config) {
             response = data.data;
-            console.log(response);
          if (response.status == 200) {
                // $scope.details = response.data;
          }
@@ -215,17 +225,53 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
   $scope.task = {};
   $scope.task.picture = '';
   $scope.task.description = '';
-  $scope.showCommpleteTaskFileds = 0;
 
-  $scope.showFields = function() {
-    $scope.showCommpleteTaskFileds = 1;
+  $scope.complete_task = function() {
+      $http({
+           method: 'POST',
+           url: api + "task/complete_task",
+           data: $.param({
+               user_key : $window.localStorage["user_key"],
+               task_id   : $scope.details.id,
+           }),
+           headers: {
+               'Content-Type': 'application/x-www-form-urlencoded'
+           }
+       }).then(function(data, status, headers, config) {
+            response = data.data;
+         if (response.status == 200) {
+
+          $ionicPopup.alert({
+                title: response.heading,
+                template: response.message
+           });
+
+          if (response.cam == 1) 
+          {
+            $scope.takePicture();
+          }
+          else{
+              $scope.closeModal();
+              $state.go('home.list');
+          }
+             //  $ionicPopup.alert({
+             //      title: 'Task',
+             //      template: 'Task Updated successfully'
+             // });
+              // $scope.closeModal();
+              // $state.go('home.account');
+               // $scope.details = response.data;
+         }
+         else{
+            $ionicPopup.alert({
+                  title: response.heading,
+                  template: response.message
+             });
+         }
+       });
+
   }
-  $scope.completeTask = function() {
-    // console.log($scope.task);
-    if ($scope.task.description == '') {
-      alert('Please add comment');
-      return false;
-    }
+  $scope.commentTask = function() {
     if ($scope.task.picture == '') {
       alert('Please attached picture');
       return false;
@@ -233,7 +279,7 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
 
         $http({
            method: 'POST',
-           url: api + "task/complete_task",
+           url: api + "task/comment_task",
            data: $.param({
                user_key : $window.localStorage["user_key"],
                task_id   : $scope.details.id,
@@ -271,7 +317,7 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
   }
 
    function onError(error) {
-        alert(error.message);
+    alert(error.message);
     }
 
   $scope.is_reached = 0;
@@ -309,6 +355,9 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
        });
         
     };
+
+
+
 });
 
 

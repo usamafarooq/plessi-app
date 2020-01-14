@@ -92,13 +92,13 @@ app.controller('taskCtrl', function($scope, $http, $ionicPopup, $state, $ionicHi
                events = [];
                $.each(taskLists, function(index, val) {
                  startdate = val.startdate.split('-');
-                 month = parseInt(startdate[1])+1;
+                 month = parseInt(startdate[1])-1;
                  startdate = new Date(startdate[0], month, startdate[2] );
                  duedate = startdate;
-                 if (val.duedate != null) 
+                 if (val.duedate != null && val.duedate != '1970-01-01') 
                  {
                   duedate = val.duedate.split('-');
-                  month = parseInt(duedate[1])+1;
+                  month = parseInt(duedate[1])-1;
                   duedate = new Date(duedate[0], month, duedate[2] );
                  }
                  calendarData = {
@@ -114,6 +114,7 @@ app.controller('taskCtrl', function($scope, $http, $ionicPopup, $state, $ionicHi
                });
 
                $scope.events = events;
+               console.log(events);
                $scope.initCalender();
          }
          else{
@@ -124,6 +125,8 @@ app.controller('taskCtrl', function($scope, $http, $ionicPopup, $state, $ionicHi
          }
        });
    }
+
+
 $scope.initCalender = function() {
 
 	$scope.uiConfig = {
@@ -139,6 +142,7 @@ $scope.initCalender = function() {
         eventDrop: $scope.alertOnDrop,
         eventResize: $scope.alertOnResize,
         events : $scope.events
+        // events: calendar_events
       }
     };
 }
