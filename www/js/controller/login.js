@@ -1,6 +1,9 @@
 app.controller('loginCtrl', function($scope, $http, $ionicPopup, $state, $window, $ionicHistory) {
 	lc = {};
 	$scope.loginform = {email : '', password : ''};
+	if($window.localStorage["user_key"] != null)
+		$state.go("home.account");
+	
 
 
 	$scope.loginsubmit = function() {

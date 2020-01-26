@@ -1,15 +1,18 @@
-app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
   $stateProvider
-  .state('login', {
-    url: '/login',
-    templateUrl: 'templates/login.html',
-    controller: 'loginCtrl'
-  }).state('home', {
-    url: '/home',
-    templateUrl: 'templates/home.html',
-    controller: 'homeCtrl'
-  }).state('home.task', {
+    .state('login', {
+      url: '/login',
+      cache: false,
+      templateUrl: 'templates/login.html',
+      controller: 'loginCtrl'
+    }).state('home', {
+      url: '/home',
+      cache: false,
+      templateUrl: 'templates/home.html',
+      controller: 'homeCtrl'
+    }).state('home.task', {
       url: '/task',
+      cache: false,
       views: {
         'task': {
           templateUrl: 'templates/task.html',
@@ -18,6 +21,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
       }
     }).state('home.list', {
       url: '/list',
+      cache: false,
       views: {
         'list': {
           templateUrl: 'templates/list.html',
@@ -26,6 +30,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
       }
     }).state('home.notification', {
       url: '/notification',
+      cache: false,
       views: {
         'notification': {
           templateUrl: 'templates/notification.html',
@@ -34,6 +39,7 @@ app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
       }
     }).state('home.account', {
       url: '/account',
+      cache: false,
       views: {
         'account': {
           templateUrl: 'templates/account.html',

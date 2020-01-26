@@ -1,10 +1,10 @@
 // var api = 'http://192.168.0.102/isolaCRM/api/';
 // var media = 'http://192.168.0.102/isolaCRM';
 // var assets = 'http://192.168.0.102/isolaCRM/assets';
-var api = 'http://localhost/isolaCRM/api/';
-var media = 'http://localhost/isolaCRM/';
-// var api = 'http://www.sirinetwork.it/isolaCRM/api/';
-// var media = 'http://www.sirinetwork.it/isolaCRM/';
+// var api = 'http://localhost/isolaCRM/api/';
+// var media = 'http://localhost/isolaCRM/';
+var api = 'http://www.sirinetwork.it/isolaCRM/api/';
+var media = 'http://www.sirinetwork.it/isolaCRM/';
 var app = angular.module('crmApp', ['ionic', 'ui.calendar']);
 var admin_url = 'http://www.sirinetwork.it/isolaCRM/admin';
 // import { Camera, CameraOptions } from '@ionic-native/camera/ngx';

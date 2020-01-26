@@ -152,7 +152,8 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
    };
 	
    $scope.closeModal = function() {
-      $scope.modal.remove();
+      $scope.modal.hide();
+      return true;
    };
 	
    //Cleanup the modal when we're done with it!
@@ -225,8 +226,24 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
   $scope.task = {};
   $scope.task.picture = '';
   $scope.task.description = '';
+  $scope.my_alert = {};
+    $scope.my_alert.alert_message = '';
+    $scope.my_alert.show_message = 0;
+
+    $scope.hide_alert = function(){
+        setTimeout(function () {
+            console.log('hide messagea')
+            $scope.my_alert.alert_message = '';
+            $scope.my_alert.show_message = 0;
+            $scope.my_alert = {};
+
+        }, 3000);  
+    }
 
   $scope.complete_task = function() {
+     
+    //   $state.go('home.list');
+    //   return false;
       $http({
            method: 'POST',
            url: api + "task/complete_task",
@@ -240,20 +257,28 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
        }).then(function(data, status, headers, config) {
             response = data.data;
          if (response.status == 200) {
+             
 
-          $ionicPopup.alert({
-                title: response.heading,
-                template: response.message
-           });
+             
+            if (response.cam == 1) 
+            {
+                $scope.takePicture();
+                $ionicPopup.alert({
+                    title: response.heading,
+                    template: response.message
+                });
+            }
+            else{
+                $scope.my_alert.alert_message = response.message;
+                $scope.my_alert.show_message = 1;
 
-          if (response.cam == 1) 
-          {
-            $scope.takePicture();
-          }
-          else{
-              $scope.closeModal();
-              $state.go('home.list');
-          }
+                $scope.closeModal();
+                $scope.hide_alert();
+                $scope.getTaskList();
+
+                // $scope.closeModal();
+                // $state.go('home.list');
+            }
              //  $ionicPopup.alert({
              //      title: 'Task',
              //      template: 'Task Updated successfully'
@@ -273,7 +298,10 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
   }
   $scope.commentTask = function() {
     if ($scope.task.picture == '') {
-      alert('Please attached picture');
+        $ionicPopup.alert({
+            title: "Task",
+            template: "Please attached picture"
+        });
       return false;
     }
 
@@ -296,7 +324,9 @@ app.controller('listCtrl', function($scope, $http, $ionicPopup,$ionicModal, $sta
                   title: 'Task',
                   template: 'Task Updated successfully'
              });
-              $scope.closeModal();
+             $scope.task.description = '';
+             $scope.task.picture = "";
+            //   $scope.closeModal();
               // $state.go('home.account');
                // $scope.details = response.data;
          }

@@ -5,7 +5,18 @@
                 <div class="login-form">
                     <h1 class="text-center screen-title">Task</h1>
         		</div>
-        	</div>
+            </div>
+            <div class="item row task-list" ng-show="my_alert.show_message == true">
+                <!-- <div class="checkbox-light col-20">
+                    <label class="checkbox small">
+                        <input type="checkbox" readonly="" onClick="return false;">
+                    </label>
+                </div> -->
+                <div class="col">
+            
+                    <h3>{{my_alert.alert_message}}</h3>
+                </div>
+            </div>
             <div class = "list list-inset" ng-init="getTaskList()">
                 <div class = "item row task-list" ng-repeat="task in lists" ng-click = "openModal(task.id)" ng-if="lists.length > 0" >
                     <div class="checkbox-light col-20">
